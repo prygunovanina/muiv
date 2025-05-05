@@ -1,0 +1,316 @@
+classDiagram
+    %% Основной класс документа
+    class Document {
+        -int documentId
+        -string regNumber
+        -string title
+        -date createdDate
+        -date updatedDate
+        -string contentPath
+        -string description
+        -int authorId
+        -int statusId
+        -int priority
+        -int securityLevelId
+        -boolean isDeleted
+        +getDocumentById()
+        +getAllDocuments()
+        +createDocument()
+        +updateDocument()
+        +deleteDocument()
+        +registerDocument()
+        +changeStatus()
+    }
+
+    %% Справочники для документов
+    class DocumentType {
+        -int typeId
+        -string typeName
+        -string description
+        -string module
+        -boolean isActive
+        +getTypeById()
+        +getAllTypes()
+        +createType()
+        +updateType()
+        +deleteType()
+    }
+
+    class DocumentStatus {
+        -int statusId
+        -string statusName
+        -string description
+        -boolean isActive
+        +getStatusById()
+        +getAllStatuses()
+        +createStatus()
+        +updateStatus()
+        +deleteStatus()
+    }
+
+    %% Типы документов (наследники)
+    class PowerOfAttorney {
+        -int poaId
+        -int documentId
+        -int grantorId
+        -int attorneyId
+        -string powers
+        -date startDate
+        -date endDate
+        -boolean isRevoked
+        -date revokeDate
+        -string revokeReason
+        +getPoaById()
+        +getAllPoas()
+        +createPoa()
+        +updatePoa()
+        +deletePoa()
+        +revokePoa()
+    }
+
+    class BusinessTrip {
+        -int tripId
+        -int documentId
+        -int employeeId
+        -string destination
+        -string purpose
+        -date startDate
+        -date endDate
+        -boolean isComplete
+        -date reportDate
+        +getTripById()
+        +getAllTrips()
+        +createTrip()
+        +updateTrip()
+        +deleteTrip()
+        +completeTrip()
+        +submitReport()
+    }
+
+    class Certificate {
+        -int certId
+        -int documentId
+        -int typeId
+        -int requestedById
+        -string recipientName
+        -string purpose
+        -date issueDate
+        -date validUntil
+        -int issuedById
+        +getCertById()
+        +getAllCerts()
+        +createCert()
+        +updateCert()
+        +deleteCert()
+        +issueCert()
+        +renewCert()
+    }
+
+    %% Пользователи и связанные классы
+    class User {
+        -int userId
+        -string username
+        -string passwordHash
+        -string firstName
+        -string lastName
+        -string email
+        -string phone
+        -int departmentId
+        -int positionId
+        -boolean isActive
+        -date lastLoginDate
+        +getUserById()
+        +getAllUsers()
+        +createUser()
+        +updateUser()
+        +deleteUser()
+        +authenticate()
+        +changePassword()
+    }
+
+    class Department {
+        -int deptId
+        -string deptName
+        -int parentDeptId
+        -int headUserId
+        -string contactInfo
+        -boolean isActive
+        +getDeptById()
+        +getAllDepts()
+        +createDept()
+        +updateDept()
+        +deleteDept()
+    }
+
+    class Position {
+        -int positionId
+        -string positionName
+        -string description
+        -boolean isActive
+        +getPositionById()
+        +getAllPositions()
+        +createPosition()
+        +updatePosition()
+        +deletePosition()
+    }
+
+    class Role {
+        -int roleId
+        -string roleName
+        -string description
+        -boolean isActive
+        +getRoleById()
+        +getAllRoles()
+        +createRole()
+        +updateRole()
+        +deleteRole()
+    }
+
+    class Permission {
+        -int permId
+        -string permName
+        -string description
+        -string module
+        +getPermById()
+        +getAllPerms()
+        +createPerm()
+        +updatePerm()
+        +deletePerm()
+    }
+
+    %% Файлы документов
+    class DocumentFile {
+        -int fileId
+        -int documentId
+        -string fileName
+        -string filePath
+        -int fileSize
+        -string fileType
+        -date uploadDate
+        -int uploadedById
+        -boolean isDeleted
+        +getFileById()
+        +getAllFiles()
+        +createFile()
+        +updateFile()
+        +deleteFile()
+    }
+
+    %% Задачи контроля
+    class ControlTask {
+        -int taskId
+        -int documentId
+        -int assignedById
+        -int assignedToId
+        -string description
+        -date dueDate
+        -int priority
+        -int statusId
+        -date createdDate
+        -date completedDate
+        -string comments
+        +getTaskById()
+        +getAllTasks()
+        +createTask()
+        +updateTask()
+        +completeTask()
+        +assignTask()
+    }
+
+    %% Процессы согласования
+    class ApprovalRoute {
+        -int routeId
+        -string routeName
+        -int docTypeId
+        -string description
+        -int createdById
+        -boolean isActive
+        +getRouteById()
+        +getAllRoutes()
+        +createRoute()
+        +updateRoute()
+        +deleteRoute()
+    }
+
+    class ApprovalStage {
+        -int stageId
+        -int routeId
+        -string stageName
+        -int sequenceNum
+        -boolean isParallel
+        -boolean isRequired
+        -int daysToComplete
+        +getStageById()
+        +getAllStages()
+        +createStage()
+        +updateStage()
+        +deleteStage()
+    }
+
+    class ApprovalProcess {
+        -int processId
+        -int documentId
+        -int routeId
+        -date startDate
+        -date endDate
+        -int statusId
+        -int currentStageId
+        -int initiatedById
+        +getProcessById()
+        +getAllProcesses()
+        +createProcess()
+        +updateProcess()
+        +completeProcess()
+        +rejectProcess()
+    }
+
+    %% Шаблоны документов
+    class DocumentTemplate {
+        -int templateId
+        -string templateName
+        -int docTypeId
+        -string filePath
+        -string description
+        -int createdById
+        -date createdDate
+        -boolean isActive
+        +getTemplateById()
+        +getAllTemplates()
+        +createTemplate()
+        +updateTemplate()
+        +deleteTemplate()
+    }
+
+    %% Связи наследования
+    Document <|-- PowerOfAttorney
+    Document <|-- BusinessTrip
+    Document <|-- Certificate
+
+    %% Ассоциации Document
+    Document --> DocumentType : относится к
+    Document --> DocumentStatus : имеет статус
+    Document --> User : автор
+
+    %% Ассоциации User
+    User --> Department : входит в
+    User --> Position : занимает
+    User --> Role : имеет
+    Role --> Permission : имеет
+
+    %% Ассоциации с документами
+    Document --> DocumentFile : содержит
+    Document --> ControlTask : контролируется
+    Document --> ApprovalProcess : согласуется
+
+    %% Ассоциации для процесса согласования
+    ApprovalRoute --> ApprovalStage : содержит этапы
+    ApprovalProcess --> ApprovalRoute : использует
+    DocumentType --> ApprovalRoute : имеет маршруты
+    User --> ApprovalProcess : инициирует
+
+    %% Ассоциации для шаблонов
+    DocumentType --> DocumentTemplate : имеет шаблоны
+    User --> DocumentTemplate : создаёт
+
+    %% Иерархия подразделений
+    Department --> Department : родительское

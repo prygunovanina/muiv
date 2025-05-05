@@ -1,0 +1,77 @@
+graph TB
+    subgraph "Пользовательский уровень"
+        WebBrowser[Web-браузеры пользователей]
+    end
+
+    subgraph "Уровень доступа"
+        LoadBalancer[Балансировщик нагрузки\nNginx]
+        Gateway[API Gateway]
+    end
+
+    subgraph "Уровень приложений"
+        AppServer1[Application Server 1\nJava + Spring Boot]
+        AppServer2[Application Server 2\nJava + Spring Boot]
+        AppServer3[Application Server 3\nJava + Spring Boot]
+    end
+
+    subgraph "Уровень данных"
+        DBMaster[PostgreSQL Master]
+        DBSlave[PostgreSQL Slave]
+        ElasticSearch[ElasticSearch Cluster]
+        MinIO[MinIO Document Storage]
+    end
+
+    subgraph "Вспомогательные сервисы"
+        Redis[Redis Cache]
+        Monitoring[Monitoring System\nPrometheus + Grafana]
+        Logging[Logging System\nELK Stack]
+    end
+
+    subgraph "Интеграционный уровень"
+        ESB[Enterprise Service Bus\nApache Camel]
+        Adapters[Integration Adapters]
+    end
+
+    WebBrowser-->LoadBalancer
+    LoadBalancer-->Gateway
+    Gateway-->AppServer1
+    Gateway-->AppServer2
+    Gateway-->AppServer3
+
+    AppServer1-->DBMaster
+    AppServer2-->DBMaster
+    AppServer3-->DBMaster
+
+    DBMaster-->DBSlave
+
+    AppServer1-->ElasticSearch
+    AppServer2-->ElasticSearch
+    AppServer3-->ElasticSearch
+
+    AppServer1-->MinIO
+    AppServer2-->MinIO
+    AppServer3-->MinIO
+
+    AppServer1-->Redis
+    AppServer2-->Redis
+    AppServer3-->Redis
+
+    AppServer1-->ESB
+    AppServer2-->ESB
+    AppServer3-->ESB
+
+    ESB-->Adapters
+
+    Adapters-->ExternalSystems[Внешние системы]
+
+    AppServer1-.->Monitoring
+    AppServer2-.->Monitoring
+    AppServer3-.->Monitoring
+    DBMaster-.->Monitoring
+    LoadBalancer-.->Monitoring
+
+    AppServer1-.->Logging
+    AppServer2-.->Logging
+    AppServer3-.->Logging
+    Gateway-.->Logging
+    ESB-.->Logging

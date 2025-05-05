@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Делопроизводство - Создание доверенности</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Верхняя панель */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 30px;
+        }
+
+        .main-nav {
+            display: flex;
+            margin-right: auto;
+        }
+
+        .main-nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .main-nav a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #3498db;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            margin-right: 20px;
+            padding: 5px 15px;
+        }
+
+        .search-bar input {
+            background-color: transparent;
+            border: none;
+            color: white;
+            width: 200px;
+            padding: 5px;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .notifications-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Боковое меню */
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            padding-top: 80px;
+            position: fixed;
+            height: 100vh;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-menu li:hover {
+            background-color: #2c3e50;
+        }
+
+        .sidebar-menu li.active {
+            background-color: #3498db;
+        }
+
+        .sidebar-menu .icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Рабочая область */
+        main {
+            flex: 1;
+            margin-left: 250px;
+            padding: 80px 30px 30px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Форма создания документа */
+        .document-form {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="6"><path d="M0 0l6 6 6-6z" fill="%23333"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 30px;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        .checkbox-control {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-control input {
+            margin-right: 10px;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        /* Пробный документ */
+        .preview-section {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .preview-number {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .preview-date {
+            font-size: 14px;
+        }
+
+        .preview-content {
+            line-height: 1.6;
+        }
+
+        .preview-signature {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature-block {
+            width: 45%;
+        }
+
+        .signature-line {
+            border-top: 1px solid #333;
+            padding-top: 5px;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        /* Футер */
+        footer {
+            margin-top: 30px;
+            padding: 20px 0;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Навигация заголовка */
+        .breadcrumb {
+            display: flex;
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb li {
+            font-size: 14px;
+            color: #95a5a6;
+        }
+
+        .breadcrumb li:not(:last-child)::after {
+            content: '/';
+            margin: 0 8px;
+            color: #bdc3c7;
+        }
+
+        .breadcrumb li a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumb li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<!-- Верхняя панель -->
+<header>
+    <div class="logo">Делопроизводство</div>
+    <nav class="main-nav">
+        <a href="#">Главная</a>
+        <a href="#" class="active">Документы</a>
+        <a href="#">Задачи</a>
+        <a href="#">Отчеты</a>
+    </nav>
+    <div class="search-bar">
+        <span class="icon">🔍</span>
+        <input type="text" placeholder="Поиск...">
+    </div>
+    <div class="user-menu">
+        <div class="notifications">
+            <span class="icon">🔔</span>
+            <span class="notifications-count">3</span>
+        </div>
+        <div class="user-avatar">ИП</div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Боковое меню -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><span class="icon">📊</span> Рабочий стол</li>
+            <li><span class="icon">📄</span> Входящие документы</li>
+            <li><span class="icon">📝</span> Исходящие документы</li>
+            <li><span class="icon">📃</span> Внутренние документы</li>
+            <li class="active"><span class="icon">📋</span> Доверенности</li>
+            <li><span class="icon">✈️</span> Командировки</li>
+            <li><span class="icon">📑</span> Справки</li>
+            <li><span class="icon">⏱️</span> Контроль исполнения</li>
+            <li><span class="icon">✅</span> Согласование</li>
+            <li><span class="icon">🗃️</span> Архив</li>
+            <li><span class="icon">📈</span> Отчеты</li>
+            <li><span class="icon">⚙️</span> Настройки</li>
+        </ul>
+    </aside>
+
+    <!-- Рабочая область -->
+    <main>
+        <ul class="breadcrumb">
+            <li><a href="#">Главная</a></li>
+            <li><a href="#">Доверенности</a></li>
+            <li>Создание доверенности</li>
+        </ul>
+
+        <div class="page-title">
+            <h1>Создание доверенности</h1>
+            <button class="btn">Предварительный просмотр</button>
+        </div>
+
+        <form class="document-form">
+            <div class="form-section">
+                <h2 class="section-title">Основная информация</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="docType">Тип доверенности</label>
+                        <select id="docType" class="form-control">
+                            <option value="general">Генеральная</option>
+                            <option value="special">Специальная</option>
+                            <option value="onetime">Разовая</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="docTemplate">Шаблон</label>
+                        <select id="docTemplate" class="form-control">
+                            <option value="default">Стандартный</option>
+                            <option value="represent">На представление интересов</option>
+                            <option value="receive">На получение товара</option>
+                            <option value="sign">На подписание документов</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="docDate">Дата выдачи</label>
+                        <input type="date" id="docDate" class="form-control" value="2023-05-15">
+                    </div>
+                    <div class="form-group">
+                        <label for="expireDate">Срок действия до</label>
+                        <input type="date" id="expireDate" class="form-control" value="2023-08-15">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Доверитель</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trustorType">Тип доверителя</label>
+                        <select id="trustorType" class="form-control">
+                            <option value="organization">Организация</option>
+                            <option value="person">Физическое лицо</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trustorName">Наименование организации</label>
+                        <input type="text" id="trustorName" class="form-control" value="ООО «Альфа-Технологии»">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trustorPosition">Должность представителя</label>
+                        <input type="text" id="trustorPosition" class="form-control" value="Генеральный директор">
+                    </div>
+                    <div class="form-group">
+                        <label for="trustorRepresentative">ФИО представителя</label>
+                        <input type="text" id="trustorRepresentative" class="form-control" value="Иванов Иван Иванович">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trustorBasis">Действует на основании</label>
+                        <input type="text" id="trustorBasis" class="form-control" value="Устава">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Доверенное лицо</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trusteeName">ФИО доверенного лица</label>
+                        <input type="text" id="trusteeName" class="form-control" value="Петров Петр Петрович">
+                    </div>
+                    <div class="form-group">
+                        <label for="trusteePosition">Должность</label>
+                        <input type="text" id="trusteePosition" class="form-control" value="Менеджер по закупкам">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trusteePassport">Паспортные данные</label>
+                        <input type="text" id="trusteePassport" class="form-control" value="Серия 1234 Номер 567890, выдан УМВД России по г. Москве 01.01.2015">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Полномочия</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="powers">Перечень полномочий</label>
+                        <textarea id="powers" class="form-control">1. Представлять интересы ООО «Альфа-Технологии» в отношениях с ООО «Бета-Поставки».
+2. Вести переговоры о поставке продукции.
+3. Подписывать договоры поставки и иные сопутствующие документы.
+4. Получать товарно-материальные ценности.
+5. Подписывать акты приема-передачи продукции.</textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="checkbox-control">
+                            <input type="checkbox" id="subdelegation">
+                            <label for="subdelegation">Право передоверия</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Дополнительно</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="notes">Примечания</label>
+                        <textarea id="notes" class="form-control">Доверенность выдана в рамках исполнения договора поставки №123 от 10.05.2023.</textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="attachments">Прикрепить файлы</label>
+                        <input type="file" id="attachments" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <div class="preview-header">
+                    <div class="preview-title">Доверенность</div>
+                    <div class="preview-number">№______</div>
+                    <div class="preview-date">г. Москва, 15 мая 2023 г.</div>
+                </div>
+                <div class="preview-content">
+                    <p>ООО «Альфа-Технологии» в лице генерального директора Иванова Ивана Ивановича, действующего на основании Устава, настоящей доверенностью уполномочивает:</p>
+
+                    <p>Петрова Петра Петровича, менеджера по закупкам, паспорт: серия 1234 номер 567890, выдан УМВД России по г. Москве 01.01.2015,</p>
+
+                    <p>представлять интересы ООО «Альфа-Технологии» со следующими полномочиями:</p>
+
+                    <p>1. Представлять интересы ООО «Альфа-Технологии» в отношениях с ООО «Бета-Поставки».<br>
+                        2. Вести переговоры о поставке продукции.<br>
+                        3. Подписывать договоры поставки и иные сопутствующие документы.<br>
+                        4. Получать товарно-материальные ценности.<br>
+                        5. Подписывать акты приема-передачи продукции.</p>
+
+                    <p>Доверенность выдана сроком до 15 августа 2023 года без права передоверия.</p>
+
+                    <p>Доверенность выдана в рамках исполнения договора поставки №123 от 10.05.2023.</p>
+                </div>
+                <div class="preview-signature">
+                    <div class="signature-block">
+                        <div class="signature-line">Генеральный директор ООО «Альфа-Технологии»</div>
+                    </div>
+                    <div class="signature-block">
+                        <div class="signature-line">И.И. Иванов</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <button type="button" class="btn btn-secondary">Сохранить как черновик</button>
+                <button type="button" class="btn">Отправить на согласование</button>
+                <button type="submit" class="btn btn-success">Зарегистрировать</button>
+            </div>
+        </form>
+
+        <footer>
+            <p>© 2023 Информационная система "Делопроизводство" | Версия 1.0 | Техническая поддержка: support@example.com</p>
+        </footer>
+    </main>
+</div>
+</body>
+</html>
