@@ -58,7 +58,6 @@ UML-диаграмма состояний жизненного цикла док
 - Объектное хранилище: MinIO
 - Поиск: ElasticSearch
 - Очереди: Apache Kafka
-- Контейнеризация: Docker + Kubernetes
 
 ### Применяемые паттерны
 - API Gateway
